@@ -1,3 +1,5 @@
+#test
+
 extends CharacterBody2D
 
 @export var acceleration := 10.0
@@ -17,8 +19,6 @@ func _physics_process(delta):
 	if Input.is_action_pressed("rotate_left"):
 		rotate(deg_to_rad(-1 * rotation_speed * delta))
 		
-		
-	
 	#if there is no input on the y axis
 	if input_vector.y == 0:
 		#move_toward moves (arg1) to (arg2) at given delta (arg3) AKA gradually slows the player when there is no Y input
