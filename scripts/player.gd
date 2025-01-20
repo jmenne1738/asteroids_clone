@@ -2,9 +2,26 @@
 
 extends CharacterBody2D
 
+signal laser_shot(laser)
+
 @export var acceleration := 10.0
 @export var max_speed := 350
 @export var rotation_speed := 250.0
+
+@onready var muzzle = $Muzzle
+
+var laser_scene = preload("res://scenes/laser.tscn")
+
+var shoot_cd = false
+var rate_of_fire = 0.18
+
+func _process(delta):
+	if Input.is_action_pressed("shoot"):
+		if !shoot_cd:
+			shoot_cd = true
+			shoot_laser()
+			await get_tree().create_timer(rate_of_fire).timeout
+			shoot_cd = false
 
 func _physics_process(delta):
 	#Vector2(x axis, y axis)
@@ -40,3 +57,9 @@ func _physics_process(delta):
 		global_position.x = screen_size.x
 	elif global_position.x > screen_size.x:
 		global_position.x = 0
+
+func shoot_laser():
+	var l = laser_scene.instantiate()
+	l.global_position = muzzle.global_position
+	l.rotation = rotation
+	emit_signal("laser_shot", l)
